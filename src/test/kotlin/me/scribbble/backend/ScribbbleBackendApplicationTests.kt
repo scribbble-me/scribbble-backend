@@ -9,5 +9,4 @@ class ScribbbleBackendApplicationTests {
     @Test
     fun contextLoads() {
     }
-
 }
