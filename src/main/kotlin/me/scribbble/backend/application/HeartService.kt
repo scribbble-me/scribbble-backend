@@ -24,4 +24,10 @@ class HeartService(
 
         return HeartResponse(savedLike)
     }
+
+    // TODO: 최적화 필요
+    fun getHeartCountOfMember(memberId: String): HeartCountResponse {
+        val count = heartRepository.countByMemberId(memberId)
+        return HeartCountResponse(memberId, count)
+    }
 }

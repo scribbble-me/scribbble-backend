@@ -24,4 +24,21 @@ class HeartAcceptanceTest : AcceptanceTest() {
         extractableResponse.jsonPath().getString("clientIp") shouldNotBe ""
         extractableResponse.jsonPath().getString("userAgent") shouldNotBe ""
     }
+
+    @Test
+    fun `회원의 하트 개수를 조회한다`() {
+        // given
+        val request = MemberRequest("devhudi@gmail.com", "password12345", "후디")
+        val memberId = post("/api/members/", request).jsonPath().getString("id")
+
+        for (ignored in 1..10) {
+            post("/api/members/${memberId}/hearts")
+        }
+
+        // when
+        val response = get("/api/members/${memberId}/hearts")
+
+        // then
+        response.jsonPath().getLong("count") shouldBe 10
+    }
 }

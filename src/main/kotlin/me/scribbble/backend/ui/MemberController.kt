@@ -3,6 +3,7 @@ package me.scribbble.backend.ui
 import me.scribbble.backend.application.*
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.net.URI
 import javax.servlet.http.HttpServletRequest
 
 @RequestMapping("/api/members")
@@ -15,9 +16,9 @@ class MemberController(
     @PostMapping
     fun join(@RequestBody request: MemberRequest): ResponseEntity<MemberResponse> {
         val response = memberService.join(request)
-        return ResponseEntity.ok(response)
+        return ResponseEntity.created(URI.create("/api/members/${response.id}")).body(response)
     }
-    
+
     @PostMapping("/{memberId}/hearts")
     fun createHeart(@PathVariable memberId: String, servletRequest: HttpServletRequest): ResponseEntity<HeartResponse> {
         val clientIp = servletRequest.getHeader("X-FORWARDED-FOR") ?: servletRequest.remoteAddr
@@ -25,6 +26,12 @@ class MemberController(
 
         val request = HeartRequest(memberId, clientIp, userAgent)
         val response = heartService.create(request)
+        return ResponseEntity.created(URI.create("/api/${memberId}/hearts")).body(response)
+    }
+
+    @GetMapping("/{memberId}/hearts")
+    fun getHeartCount(@PathVariable memberId: String): ResponseEntity<HeartCountResponse> {
+        val response = heartService.getHeartCountOfMember(memberId)
         return ResponseEntity.ok(response)
     }
 }

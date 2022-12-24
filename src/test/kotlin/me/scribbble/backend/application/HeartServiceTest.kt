@@ -3,12 +3,13 @@ package me.scribbble.backend.application
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.longs.shouldBeGreaterThan
+import io.kotest.matchers.shouldBe
 import me.scribbble.backend.support.annotation.ServiceTest
 import me.scribbble.backend.support.fixture.createLikeRequest
 import me.scribbble.backend.support.fixture.createMemberRequest
 
 @ServiceTest
-class LikeServiceTest(
+class HeartServiceTest(
     private val heartService: HeartService,
     private val memberService: MemberService
 ) : StringSpec({
@@ -36,5 +37,22 @@ class LikeServiceTest(
         shouldThrow<IllegalArgumentException> {
             heartService.create(likeRequest)
         }
+    }
+
+    "특정 유저의 하트 개수를 가져온다 " {
+        // given
+        val savedMember = memberService.join(createMemberRequest())
+
+        val likeRequest = createLikeRequest(savedMember.id)
+        for (ignored in 1..10) {
+            heartService.create(likeRequest)
+        }
+
+        // when
+        val actual = heartService.getHeartCountOfMember(savedMember.id)
+
+        // then
+        actual.memberId shouldBe savedMember.id
+        actual.count shouldBe 10
     }
 })
