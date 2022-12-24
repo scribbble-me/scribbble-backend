@@ -1,42 +1,40 @@
 package me.scribbble.backend.application
 
 import io.kotest.assertions.throwables.shouldThrow
-import io.kotest.core.spec.style.BehaviorSpec
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldHaveLength
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.transaction.annotation.Transactional
+import me.scribbble.backend.support.annotation.ServiceTest
+import me.scribbble.backend.support.fixture.EMAIL
+import me.scribbble.backend.support.fixture.USERNAME
+import me.scribbble.backend.support.fixture.createMemberRequest
 
-@Transactional
-@SpringBootTest
+@ServiceTest
 class MemberServiceTest(
     val memberService: MemberService
-) : BehaviorSpec({
+) : StringSpec({
 
-    Given("사용자가 아직 가입하지 않은 경우") {
-        val email = "devhudi@gmail.com"
-        val password = "password12345"
-        val username = "후디"
+    "사용자가 가입에 성공한다" {
+        // given
+        val memberRequest = createMemberRequest()
 
-        When("사용자가 가입을 한다면") {
-            val memberRequest = MemberRequest(email, password, username)
-            val memberResponse: MemberResponse = memberService.join(memberRequest)
+        // when
+        val memberResponse: MemberResponse = memberService.join(memberRequest)
 
-            Then("사용자가 가입에 성공한다") {
-                memberResponse.id shouldHaveLength 36
-                memberResponse.email shouldBe email
-                memberResponse.username shouldBe username
-            }
-        }
+        // then
+        memberResponse.id shouldHaveLength 36
+        memberResponse.email shouldBe EMAIL
+        memberResponse.username shouldBe USERNAME
+    }
 
-        When("사용자가 이미 가입된 이메일로 가입한다면") {
-            val memberRequest = MemberRequest(email, password, username)
+    "이미 가입한 이메일로 가입 시도시, 예외가 발생한다" {
+        // given
+        val memberRequest = createMemberRequest()
+        memberService.join(memberRequest)
 
-            Then("사용자 가입에 실패한다") {
-                shouldThrow<java.lang.IllegalArgumentException> {
-                    memberService.join(memberRequest)
-                }
-            }
+        // when & then
+        shouldThrow<java.lang.IllegalArgumentException> {
+            memberService.join(memberRequest)
         }
     }
 })
