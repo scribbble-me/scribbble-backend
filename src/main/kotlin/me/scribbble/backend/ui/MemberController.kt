@@ -17,7 +17,7 @@ class MemberController(
         val response = memberService.join(request)
         return ResponseEntity.ok(response)
     }
-
+    
     @PostMapping("/{memberId}/hearts")
     fun createHeart(@PathVariable memberId: String, servletRequest: HttpServletRequest): ResponseEntity<HeartResponse> {
         val clientIp = servletRequest.getHeader("X-FORWARDED-FOR") ?: servletRequest.remoteAddr

@@ -1,8 +1,8 @@
 package me.scribbble.backend.acceptance
 
+import io.kotest.matchers.shouldBe
 import me.scribbble.backend.acceptance.support.AcceptanceTest
 import me.scribbble.backend.application.MemberRequest
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 class MemberAcceptanceTest : AcceptanceTest() {
@@ -16,8 +16,8 @@ class MemberAcceptanceTest : AcceptanceTest() {
         val extractableResponse = post("/api/members/", request)
 
         // then
-        assertThat(extractableResponse.body().jsonPath().getString("id").length).isEqualTo(36)
-        assertThat(extractableResponse.body().jsonPath().getString("email")).isEqualTo("devhudi@gmail.com")
-        assertThat(extractableResponse.body().jsonPath().getString("username")).isEqualTo("후디")
+        extractableResponse.body().jsonPath().getString("id").length shouldBe 36
+        extractableResponse.body().jsonPath().getString("email") shouldBe "devhudi@gmail.com"
+        extractableResponse.body().jsonPath().getString("username") shouldBe "후디"
     }
 }
