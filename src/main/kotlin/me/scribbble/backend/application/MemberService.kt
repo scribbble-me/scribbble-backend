@@ -11,6 +11,8 @@ class MemberService(
     private val memberRepository: MemberRepository
 ) {
 
+    // TODO: 비밀번호 암호화
+
     @Transactional
     fun join(request: MemberRequest): MemberResponse {
         val member = Member(request.email, request.password, request.username)

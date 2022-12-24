@@ -53,4 +53,8 @@ class Member(
             throw IllegalArgumentException("비밀번호는 ${USERNAME_MIN_LENGTH}자 이상, ${USERNAME_MAX_LENGTH}자 이하여야 합니다.")
         }
     }
+
+    fun isCorrectPassword(password: String): Boolean {
+        return this.password == password
+    }
 }
