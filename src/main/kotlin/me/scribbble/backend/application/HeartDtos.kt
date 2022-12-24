@@ -21,3 +21,8 @@ data class HeartRequest(
     val clientIp: String,
     val userAgent: String
 )
+
+data class HeartCountResponse(
+    val memberId: String,
+    val count: Long
+)
