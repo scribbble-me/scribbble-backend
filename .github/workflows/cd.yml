@@ -36,4 +36,8 @@ jobs:
             docker stop $(docker ps -a -q) 
             docker rm $(docker ps -a -q) 
             docker pull devhudi/scribbble-backend
-            docker run -d -p 8080:8080 --name scribbble-backend devhudi/scribbble-backend
+            docker run -d -p 8080:8080 --name scribbble-backend \
+              -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
+              -e DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }} \
+              -e DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} \
+              devhudi/scribbble-backend
