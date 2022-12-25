@@ -3,13 +3,14 @@ spring:
     jdbc-url: jdbc:mysql://${DATABASE_URL}
     username: ${DATABASE_USERNAME}
     password: ${DATABASE_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     properties:
       hibernate:
         format_sql:
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: validate
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
