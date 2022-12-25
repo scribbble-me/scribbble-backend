@@ -18,6 +18,6 @@ class AuthService(
             throw LoginFailedException()
         }
 
-        return MemberResponse(foundMember.id, foundMember.email, foundMember.username)
+        return MemberResponse(foundMember.id, foundMember.email, foundMember.username, foundMember.school.id)
     }
 }

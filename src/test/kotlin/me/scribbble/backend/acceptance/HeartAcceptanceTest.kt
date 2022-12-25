@@ -3,16 +3,16 @@ package me.scribbble.backend.acceptance
 import io.kotest.matchers.longs.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import me.scribbble.backend.acceptance.support.AcceptanceTest
+import me.scribbble.backend.acceptance.support.AbstractAcceptanceTest
 import me.scribbble.backend.application.MemberRequest
 import org.junit.jupiter.api.Test
 
-class HeartAcceptanceTest : AcceptanceTest() {
+class HeartAcceptanceTest : AbstractAcceptanceTest() {
 
     @Test
     fun `회원에게 하트가 생성된다`() {
         // given
-        val request = MemberRequest("devhudi@gmail.com", "password12345", "후디")
+        val request = MemberRequest("devhudi@gmail.com", "password12345", "후디", 1L)
         val memberId = post("/api/members/", request).jsonPath().getString("id")
 
         // when
@@ -28,7 +28,7 @@ class HeartAcceptanceTest : AcceptanceTest() {
     @Test
     fun `회원의 하트 개수를 조회한다`() {
         // given
-        val request = MemberRequest("devhudi@gmail.com", "password12345", "후디")
+        val request = MemberRequest("devhudi@gmail.com", "password12345", "후디", 1L)
         val memberId = post("/api/members/", request).jsonPath().getString("id")
 
         for (ignored in 1..10) {

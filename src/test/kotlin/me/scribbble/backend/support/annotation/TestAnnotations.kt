@@ -8,3 +8,8 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 @SpringBootTest
 annotation class ServiceTest
+
+@Target(AnnotationTarget.CLASS)
+@Retention(AnnotationRetention.RUNTIME)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+annotation class AcceptanceTest

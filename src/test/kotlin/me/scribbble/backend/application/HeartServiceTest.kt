@@ -4,19 +4,23 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.longs.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
+import me.scribbble.backend.domain.school.SchoolRepository
 import me.scribbble.backend.support.annotation.ServiceTest
 import me.scribbble.backend.support.fixture.createLikeRequest
 import me.scribbble.backend.support.fixture.createMemberRequest
+import me.scribbble.backend.support.fixture.createSchool
 
 @ServiceTest
 class HeartServiceTest(
     private val heartService: HeartService,
-    private val memberService: MemberService
+    private val memberService: MemberService,
+    private val schoolRepository: SchoolRepository
 ) : StringSpec({
 
     "좋아요할 대상 회원이 존재할 때 회원에 대해 좋아요가 생성된다" {
         // given
-        val savedMember = memberService.join(createMemberRequest())
+        val schoolId: Long = schoolRepository.save(createSchool()).id
+        val savedMember = memberService.join(createMemberRequest(schoolId = schoolId))
 
         // when
         val likeRequest = createLikeRequest(savedMember.id)
@@ -41,7 +45,8 @@ class HeartServiceTest(
 
     "특정 유저의 하트 개수를 가져온다 " {
         // given
-        val savedMember = memberService.join(createMemberRequest())
+        val schoolId: Long = schoolRepository.save(createSchool()).id
+        val savedMember = memberService.join(createMemberRequest(schoolId = schoolId))
 
         val likeRequest = createLikeRequest(savedMember.id)
         for (ignored in 1..10) {
