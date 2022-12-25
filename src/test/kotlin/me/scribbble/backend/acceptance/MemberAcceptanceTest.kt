@@ -1,16 +1,16 @@
 package me.scribbble.backend.acceptance
 
 import io.kotest.matchers.shouldBe
-import me.scribbble.backend.acceptance.support.AcceptanceTest
+import me.scribbble.backend.acceptance.support.AbstractAcceptanceTest
 import me.scribbble.backend.application.MemberRequest
 import org.junit.jupiter.api.Test
 
-class MemberAcceptanceTest : AcceptanceTest() {
+class MemberAcceptanceTest : AbstractAcceptanceTest() {
 
     @Test
     fun `회원의 회원가입이 정상 진행된다`() {
         // given
-        val request = MemberRequest("devhudi@gmail.com", "password12345", "후디")
+        val request = MemberRequest("devhudi@gmail.com", "password12345", "후디", 1L)
 
         // when
         val extractableResponse = post("/api/members/", request)

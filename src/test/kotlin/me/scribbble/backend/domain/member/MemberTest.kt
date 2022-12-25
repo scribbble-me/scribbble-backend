@@ -5,18 +5,18 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.data.forAll
 import io.kotest.data.row
+import me.scribbble.backend.support.fixture.EMAIL
+import me.scribbble.backend.support.fixture.PASSWORD
+import me.scribbble.backend.support.fixture.USERNAME
+import me.scribbble.backend.support.fixture.createSchool
 
 class MemberTest : BehaviorSpec({
 
     Given("Member 생성") {
-        val email = "devhudi@gmail.com"
-        val password = "password12345"
-        val username = "후디"
-
         When("정상적인 정보를 전달하면") {
             Then("객체가 생성된다") {
                 shouldNotThrow<IllegalArgumentException> {
-                    Member(email, password, username)
+                    Member(EMAIL, PASSWORD, USERNAME, createSchool())
                 }
             }
         }
@@ -29,7 +29,7 @@ class MemberTest : BehaviorSpec({
                     row("@gmail")
                 ) { invalidEmail ->
                     shouldThrow<IllegalArgumentException> {
-                        Member(invalidEmail, password, username)
+                        Member(invalidEmail, PASSWORD, USERNAME, createSchool())
                     }
                 }
             }
@@ -43,7 +43,7 @@ class MemberTest : BehaviorSpec({
                     row("1".repeat(65))
                 ) { invalidPassword ->
                     shouldThrow<IllegalArgumentException> {
-                        Member(email, invalidPassword, username)
+                        Member(EMAIL, invalidPassword, USERNAME, createSchool())
                     }
                 }
             }
@@ -56,7 +56,7 @@ class MemberTest : BehaviorSpec({
                     row("5자초과유저네임")
                 ) { invalidUsername ->
                     shouldThrow<IllegalArgumentException> {
-                        Member(email, password, invalidUsername)
+                        Member(EMAIL, PASSWORD, invalidUsername, createSchool())
                     }
                 }
             }

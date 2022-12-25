@@ -1,18 +1,19 @@
 package me.scribbble.backend.domain.member
 
+import me.scribbble.backend.domain.school.School
 import me.scribbble.backend.domain.support.DateBaseEntity
 import org.hibernate.annotations.GenericGenerator
 import java.util.regex.Pattern
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity
 class Member(
     val email: String,
     val password: String,
-    val username: String
-    // TODO: 학교 정보 추가
+    val username: String,
+    @ManyToOne
+    @JoinColumn(name = "school_id")
+    val school: School
 ) : DateBaseEntity() {
 
     @Id

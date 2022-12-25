@@ -3,15 +3,17 @@ package me.scribbble.backend.acceptance.support
 import io.restassured.RestAssured
 import io.restassured.response.ExtractableResponse
 import io.restassured.response.Response
+import me.scribbble.backend.domain.school.School
+import me.scribbble.backend.domain.school.SchoolRepository
 import me.scribbble.backend.support.DatabaseCleaner
+import me.scribbble.backend.support.annotation.AcceptanceTest
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.MediaType
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-abstract class AcceptanceTest {
+@AcceptanceTest
+abstract class AbstractAcceptanceTest {
 
     @LocalServerPort
     private val port: Int = 0
@@ -19,10 +21,24 @@ abstract class AcceptanceTest {
     @Autowired
     private lateinit var databaseCleaner: DatabaseCleaner
 
+    @Autowired
+    private lateinit var schoolRepository: SchoolRepository
+
     @BeforeEach
     fun setUpRestAssured() {
         RestAssured.port = port;
         databaseCleaner.clear()
+    }
+
+    @BeforeEach
+    fun setUpSchools() {
+        schoolRepository.save(School("AA 초등학교"))
+        schoolRepository.save(School("BB 초등학교"))
+        schoolRepository.save(School("CC 중학교"))
+        schoolRepository.save(School("DD 고등학교"))
+        schoolRepository.save(School("EE 고등학교"))
+        schoolRepository.save(School("FF 대학교"))
+        // TODO: 더 좋은 방법을 생각해야함
     }
 
     fun get(url: String): ExtractableResponse<Response> {
