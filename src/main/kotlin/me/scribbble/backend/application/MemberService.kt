@@ -28,4 +28,15 @@ class MemberService(
         val savedMember = memberRepository.save(member)
         return MemberResponse(savedMember)
     }
+
+    fun getMember(memberId: String): MemberPublicResponse {
+        val member = memberRepository.findByIdOrNull(memberId)
+        require(member != null) { "회원을 찾을 수 없습니다." }
+
+        return MemberPublicResponse(
+            member.id,
+            member.username,
+            SchoolResponse(member.school)
+        )
+    }
 }

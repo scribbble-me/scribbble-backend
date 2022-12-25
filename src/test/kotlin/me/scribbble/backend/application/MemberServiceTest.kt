@@ -42,4 +42,25 @@ class MemberServiceTest(
             memberService.join(memberRequest)
         }
     }
+
+    "유저를 단건 조회한다" {
+        // given
+        val schoolId: Long = schoolRepository.save(createSchool()).id
+        val memberRequest = createMemberRequest(schoolId = schoolId)
+        val memberResponse = memberService.join(memberRequest)
+
+        // when
+        val actual = memberService.getMember(memberResponse.id)
+
+        // then
+        actual.id shouldBe memberResponse.id
+        actual.username shouldBe memberResponse.username
+        actual.school.id shouldBe schoolId
+    }
+
+    "없는 유저를 단건 조회하면, 예외가 발생한다" {
+        shouldThrow<IllegalArgumentException> {
+            memberService.getMember("abc")
+        }
+    }
 })
