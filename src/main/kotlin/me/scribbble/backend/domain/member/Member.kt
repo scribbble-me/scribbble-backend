@@ -2,6 +2,7 @@ package me.scribbble.backend.domain.member
 
 import me.scribbble.backend.domain.school.School
 import me.scribbble.backend.domain.support.DateBaseEntity
+import me.scribbble.backend.security.sha256
 import org.hibernate.annotations.GenericGenerator
 import java.util.regex.Pattern
 import javax.persistence.*
@@ -9,7 +10,7 @@ import javax.persistence.*
 @Entity
 class Member(
     val email: String,
-    val password: String,
+    password: String,
     val username: String,
     @ManyToOne
     @JoinColumn(name = "school_id")
@@ -20,6 +21,8 @@ class Member(
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     val id: String = ""
+
+    val password: String
 
     companion object {
         private const val EMAIL_REGEX =
@@ -34,6 +37,8 @@ class Member(
         validateEmail(email)
         validatePassword(password)
         validateUsername(username)
+
+        this.password = sha256(password)
     }
 
     private fun validateEmail(email: String) {
@@ -56,6 +61,6 @@ class Member(
     }
 
     fun isCorrectPassword(password: String): Boolean {
-        return this.password == password
+        return this.password == sha256(password)
     }
 }
