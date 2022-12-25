@@ -16,9 +16,15 @@ class RankingController(
     val rankingService: RankingService
 ) {
 
-    @GetMapping("/school/{schoolId}")
+    @GetMapping("/schools/{schoolId}")
     fun getRanking(@PathVariable schoolId: Long): ResponseEntity<List<MemberPublicResponse>> {
         val response = rankingService.getRanking(schoolId)
+        return ResponseEntity.ok(response)
+    }
+
+    @GetMapping("/members/{memberId}")
+    fun getMemberRanking(@PathVariable memberId: String): ResponseEntity<RankingResponse> {
+        val response = rankingService.getMemberRanking(memberId)
         return ResponseEntity.ok(response)
     }
 
@@ -27,7 +33,7 @@ class RankingController(
         val session = httpServletRequest.getSession()
         val memberId = session.getAttribute("id") as String
 
-        val response = rankingService.getMyRanking(memberId)
+        val response = rankingService.getMemberRanking(memberId)
         return ResponseEntity.ok(response)
     }
 }

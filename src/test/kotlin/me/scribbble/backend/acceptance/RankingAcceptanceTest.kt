@@ -25,13 +25,14 @@ class RankingAcceptanceTest : AbstractAcceptanceTest() {
     lateinit var heartRepository: HeartRepository
 
     lateinit var school: School
+    lateinit var members: List<Member>
 
     @BeforeEach
     fun setUp() {
         school = schoolRepository.save(School("XX 학교"))
 
         // 멤버 생성
-        val members: List<Member> = listOf("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K").map { username ->
+        members = listOf("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K").map { username ->
             memberRepository.save(
                 createMember(
                     email = "${username}@gmail.com",
@@ -50,15 +51,24 @@ class RankingAcceptanceTest : AbstractAcceptanceTest() {
         }
     }
 
-
     // TODO: 테스트 케이스 보강
     @Test
     fun `특정 학교의 랭킹을 조회한다`() {
         // given & when
-        val response = get("/api/ranking/school/${school.id}")
+        val response = get("/api/ranking/schools/${school.id}")
 
         // then
         response.statusCode() shouldBe 200
+    }
+
+    @Test
+    fun `특정 유저의 학교 랭킹을 조회한다`() {
+        // given & when
+        val response = get("/api/ranking/members/${members[0].id}")
+
+        // then
+        response.jsonPath().getLong("ranking") shouldBe 11
+        response.jsonPath().getString("school.name") shouldBe "XX 학교"
     }
 
     // TOOD: 자기 자신 랭크 조회 테스트 케이스 추가
