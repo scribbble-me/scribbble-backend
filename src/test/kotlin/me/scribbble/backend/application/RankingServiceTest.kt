@@ -2,6 +2,7 @@ package me.scribbble.backend.application
 
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import me.scribbble.backend.domain.like.Heart
 import me.scribbble.backend.domain.like.HeartRepository
 import me.scribbble.backend.domain.member.Member
@@ -48,5 +49,35 @@ class RankingServiceTest(
 
         // then
         actual shouldContainExactly listOf("K", "J", "I", "H", "G", "F", "E", "D", "C", "B")
+    }
+
+    "자신의 학교 랭킹을 가져온다" {
+        // given
+        val school = schoolRepository.save(School("XX 학교"))
+
+        // 멤버 생성
+        val members: List<Member> = listOf("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K").map { username ->
+            memberRepository.save(
+                createMember(
+                    email = "${username}@gmail.com",
+                    username = username,
+                    school = school
+                )
+            )
+        }
+
+        for (i in 0 until members.size) {
+            val member = members.get(i)
+
+            for (j in 0..i) {
+                heartRepository.save(Heart(member, "", ""))
+            }
+        }
+
+        // when
+        val ranking = rankingService.getMyRanking(members.get(0).id)
+
+        // then
+        ranking.ranking shouldBe 11
     }
 })
