@@ -16,6 +16,12 @@ data class MemberResponse(
     )
 }
 
+data class MemberPublicResponse(
+    val id: String,
+    val username: String,
+    val school: SchoolResponse
+)
+
 data class MemberRequest(
     val email: String,
     val password: String,
