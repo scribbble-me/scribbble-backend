@@ -75,7 +75,7 @@ class RankingServiceTest(
         }
 
         // when
-        val ranking = rankingService.getMyRanking(members.get(0).id)
+        val ranking = rankingService.getMemberRanking(members.get(0).id)
 
         // then
         ranking.ranking shouldBe 11

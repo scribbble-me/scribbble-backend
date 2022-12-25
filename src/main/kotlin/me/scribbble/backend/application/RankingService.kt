@@ -32,7 +32,7 @@ class RankingService(
             .map { member -> MemberPublicResponse(member) }
     }
 
-    fun getMyRanking(memberId: String): RankingResponse {
+    fun getMemberRanking(memberId: String): RankingResponse {
         val member = memberRepository.findByIdOrNull(memberId)
 
         require(member != null) { "회원이 존재하지 않습니다" }
