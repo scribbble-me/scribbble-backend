@@ -25,6 +25,20 @@ class MemberController(
         return ResponseEntity.ok(response)
     }
 
+    @GetMapping("/me")
+    fun getMe(servletRequest: HttpServletRequest): ResponseEntity<MemberPublicResponse> {
+        val session = servletRequest.getSession()
+
+        for (attributeName in session.attributeNames) {
+            println("attributeName = ${attributeName}")
+        }
+
+        val memberId = session.getAttribute("id") as String
+
+        val response = memberService.getMember(memberId)
+        return ResponseEntity.ok(response)
+    }
+
     @PostMapping("/{memberId}/hearts")
     fun createHeart(@PathVariable memberId: String, servletRequest: HttpServletRequest): ResponseEntity<HeartResponse> {
         val clientIp = servletRequest.getHeader("X-FORWARDED-FOR") ?: servletRequest.remoteAddr

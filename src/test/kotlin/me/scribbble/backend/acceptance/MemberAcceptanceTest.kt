@@ -1,11 +1,13 @@
 package me.scribbble.backend.acceptance
 
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import me.scribbble.backend.acceptance.support.AbstractAcceptanceTest
 import me.scribbble.backend.application.MemberRequest
 import me.scribbble.backend.support.fixture.EMAIL
 import me.scribbble.backend.support.fixture.PASSWORD
 import me.scribbble.backend.support.fixture.USERNAME
+import me.scribbble.backend.support.fixture.createLoginRequest
 import org.junit.jupiter.api.Test
 
 class MemberAcceptanceTest : AbstractAcceptanceTest() {
@@ -38,5 +40,21 @@ class MemberAcceptanceTest : AbstractAcceptanceTest() {
         response.jsonPath().getString("id") shouldBe memberId
         response.jsonPath().getString("username") shouldBe USERNAME
         response.jsonPath().getLong("school.id") shouldBe 1L
+    }
+
+    @Test
+    fun `자기자신의 정보를 조회한다`() {
+        // given
+        val memberRequest = MemberRequest(EMAIL, PASSWORD, USERNAME, 1L)
+
+        post("/api/members/", memberRequest)
+        val cookie = post("/api/auth", createLoginRequest()).cookie("JSESSIONID") // TODO: 세션 유지 방법 리팩토링
+
+        // when
+        val response = get("/api/members/me", cookie)
+
+        // then
+        response.jsonPath().getString("id") shouldNotBe ""
+        response.jsonPath().getString("username") shouldBe USERNAME
     }
 }

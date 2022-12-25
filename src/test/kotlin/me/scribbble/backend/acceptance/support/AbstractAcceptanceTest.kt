@@ -41,12 +41,13 @@ abstract class AbstractAcceptanceTest {
         // TODO: 더 좋은 방법을 생각해야함
     }
 
-    fun get(url: String): ExtractableResponse<Response> {
+    fun get(url: String, sessionId: String? = null): ExtractableResponse<Response> {
         return RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .cookie("JSESSIONID", sessionId)
             .`when`().get(url)
             .then().log().all()
-            .extract();
+            .extract()
     }
 
     fun post(url: String, body: Any = mapOf<Any, Any>()): ExtractableResponse<Response> {
@@ -55,7 +56,7 @@ abstract class AbstractAcceptanceTest {
             .body(body)
             .`when`().post(url)
             .then().log().all()
-            .extract();
+            .extract()
     }
 
     fun put(url: String, body: Any = mapOf<Any, Any>()): ExtractableResponse<Response> {
@@ -64,7 +65,7 @@ abstract class AbstractAcceptanceTest {
             .body(body)
             .`when`().put(url)
             .then().log().all()
-            .extract();
+            .extract()
     }
 
     fun delete(url: String): ExtractableResponse<Response> {
@@ -72,7 +73,7 @@ abstract class AbstractAcceptanceTest {
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .`when`().delete(url)
             .then().log().all()
-            .extract();
+            .extract()
     }
 }
 
