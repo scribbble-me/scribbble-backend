@@ -20,7 +20,13 @@ data class MemberPublicResponse(
     val id: String,
     val username: String,
     val school: SchoolResponse
-)
+) {
+    constructor(member: Member) : this(
+        member.id,
+        member.username,
+        SchoolResponse(member.school)
+    )
+}
 
 data class MemberRequest(
     val email: String,
